@@ -1,11 +1,17 @@
 const { prisma } = require("../lib/prisma");
 // ---------------------------------------------------------------
 
-exports.renderHomePage = (req, res) => {
+exports.renderHomePage = async (req, res) => {
   if (!req.user) {
     return res.redirect("/login");
   }
-  return res.render("index", { user: req.user });
+  const data = await prisma.folder.findMany({
+    where: {
+      userId: req.user.id,
+      parentId: null,
+    },
+  });
+  res.render("index", { user: req.user, folders: data });
 };
 
 exports.renderLoginPage = (req, res) => res.render("login", { user: req.user });

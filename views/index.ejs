@@ -4,9 +4,45 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Arqive</title>
-    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="/css/style.css" />
   </head>
   <body>
     <h1>Hello world</h1>
+    <% if(locals.user) { %>
+    <h2><%= user.username %></h2>
+    <% if(locals.parentName) { %>
+    <h4><%= parentName %></h4>
+    <% } else { %>
+    <h4>Root</h4>
+    <% } %><button class="create-folder-btn">Create Folder</button>
+
+    <% if(locals.folders && locals.folders.length > 0) { %> <%
+    folders.forEach(function(folder) { %>
+    <p><%=folder.name%></p>
+    <a href="/folder/<%=folder.id%>">Open</a>
+    <% }) %> <% } else { %>
+    <p>No folders</p>
+    <% } %>
+
+    <div class="modal">
+      <form action="/create-folder" method="POST">
+        <label
+          >Folder Name<input type="text" name="folderName" id="folderName"
+        /></label>
+        <button type="submit">Add Folder</button>
+        <button type="button">Cancel</button>
+      </form>
+    </div>
+    <% } %>
+
+    <script>
+      const button = document.body.querySelector(".create-folder-btn");
+      button.addEventListener("click", () => {
+        const modal = document.body.querySelector(".modal");
+        // const folderName = document.body.querySelector("#folderName");
+        // folderName.target.value = "";
+        modal.style.display = modal.style.display === "flex" ? "none" : "flex";
+      });
+    </script>
   </body>
 </html>
