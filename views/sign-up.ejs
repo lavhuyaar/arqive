@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Arqive - Sign Up</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <main>
+      <form action="/sign-up" method="POST">
+        <label
+          >First Name: <input type="text" name="firstName" id="firstName"
+        /></label>
+        <label
+          >Last Name: <input type="text" name="lastName" id="lastName"
+        /></label>
+        <label
+          >Username: <input type="text" name="username" id="username"
+        /></label>
+        <label
+          >Password:<input
+            type="password"
+            name="password"
+            id="password" /></label
+        ><label
+          >Confirm Password:<input
+            type="password"
+            name="confirm_password"
+            id="confirm_password"
+        /></label>
+        <button type="submit">Sign up</button>
+      </form>
+      <p>Don't have an account? <a href="/login">Login</a></p>
+    </main>
+  </body>
+</html>
