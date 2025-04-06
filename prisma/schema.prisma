@@ -14,6 +14,7 @@ model User {
   username  String   @unique @db.Char(15)
   password  String   @db.Char(2000)
   Folder    Folder[]
+  File      File[]
 }
 
 model Folder {
@@ -24,8 +25,20 @@ model Folder {
   isRoot    Boolean  @default(false)
   userId    String
   parentId  String?
-  parent    Folder?  @relation("Parent", fields: [parentId], references: [id])
+  parent    Folder?  @relation("Parent", fields: [parentId], references: [id], onDelete: Cascade)
   children  Folder[] @relation("Parent")
+  files     File[]
+}
+
+model File {
+  id        String   @id @default(uuid())
+  name      String
+  createdAt DateTime @default(now())
+  url       String
+  user      User     @relation(fields: [userId], references: [id])
+  userId    String
+  folder    Folder   @relation(fields: [folderId], references: [id])
+  folderId  String
 }
 
 model Session {

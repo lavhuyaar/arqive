@@ -1,19 +1,15 @@
-const { prisma } = require("../lib/prisma");
-// ---------------------------------------------------------------
+const { getNestedFolders } = require("../db/queries");
+const asyncHandler = require("express-async-handler");
 
-exports.renderHomePage = async (req, res) => {
-  if (!req.user) {
-    return res.redirect("/login");
-  }
-  const data = await prisma.folder.findMany({
-    where: {
-      userId: req.user.id,
-      parentId: null,
-    },
-  });
+exports.renderHomePage = asyncHandler(async (req, res, next) => {
+  const data = await getNestedFolders(req.user.id, null);
   res.render("index", { user: req.user, folders: data, parentFolder: null });
-};
+});
 
-exports.renderLoginPage = (req, res) => res.render("login", { user: req.user });
+exports.renderLoginPage = asyncHandler(async (req, res, next) =>
+  res.render("login", { user: req.user })
+);
 
-exports.renderSignUpPage = (req, res) => res.render("sign-up");
+exports.renderSignUpPage = asyncHandler(async (req, res, next) =>
+  res.render("sign-up")
+);

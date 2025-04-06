@@ -1,17 +1,13 @@
-const { prisma } = require("../lib/prisma");
 const passport = require("passport");
 const bcrypt = require("bcryptjs");
+const { createUser, getUserById, getUserByUsername } = require("../db/queries");
 const LocalStrategy = require("passport-local").Strategy;
 
 // ----------PASSPORT JS SETUP-----------------
 passport.use(
   new LocalStrategy(async (username, password, done) => {
     try {
-      const user = await prisma.user.findFirst({
-        where: {
-          username,
-        },
-      });
+      const user = await getUserByUsername(username);
       if (!user) {
         return done(null, false, { message: "Incorrect username" });
       }
@@ -32,11 +28,7 @@ passport.serializeUser((user, done) => {
 
 passport.deserializeUser(async (id, done) => {
   try {
-    const user = await prisma.user.findFirst({
-      where: {
-        id,
-      },
-    });
+    const user = await getUserById(id);
     done(null, user);
   } catch (err) {
     done(err);
@@ -71,11 +63,7 @@ exports.signUpUser = async (req, res, next) => {
   const { firstName, lastName, username, password } = req.body;
 
   //Checks if username already exists
-  const isUsernameUnavailable = await prisma.user.findFirst({
-    where: {
-      username,
-    },
-  });
+  const isUsernameUnavailable = await getUserByUsername(username);
   if (isUsernameUnavailable) {
     return res.status(404).render("sign-up", {
       errors: [{ msg: "This username already exists" }],
@@ -84,14 +72,7 @@ exports.signUpUser = async (req, res, next) => {
 
   try {
     const hashedPassword = await bcrypt.hash(password, 10); //Hashed password
-    await prisma.user.create({
-      data: {
-        username,
-        firstName,
-        lastName,
-        password: hashedPassword,
-      },
-    });
+    await createUser(username, firstName, lastName, hashedPassword);
     res.redirect("/login");
   } catch (err) {
     console.error(err);

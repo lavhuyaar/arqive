@@ -15,16 +15,18 @@
     <% } else { %>
     <h4>Root</h4>
     <% } %><button class="create-folder-btn">Create Folder</button>
+    <button class="add-file-btn">Add File</button>
 
     <% if(locals.folders && locals.folders.length > 0) { %> <%
     folders.forEach(function(folder) { %>
     <p><%=folder.name%></p>
     <a href="/folder/<%=folder.id%>">Open</a>
+    <a href="/folder/<%=folder.id%>/delete">Delete</a>
     <% }) %> <% } else { %>
     <p>No folders</p>
     <% } %>
 
-    <div class="modal">
+    <dialog class="folder-modal">
       <form
         action="/folder/<%= parentFolder ? parentFolder.id : 'root'%>/create"
         method="POST"
@@ -35,19 +37,41 @@
             name="newFolderName"
             id="newFolderName"
         /></label>
+        <button type="button" class="cancel-btn">Cancel</button>
         <button type="submit">Add Folder</button>
-        <button type="button">Cancel</button>
       </form>
-    </div>
+    </dialog>
+
+    <dialog class="file-modal">
+      <form
+        action="/folder/<%= parentFolder ? parentFolder.id : 'root'%>/add-file"
+        method="POST"
+        enctype="multipart/form-data"
+      >
+        <input type="file" name="newFile" id="newFile" />
+        <button type="button">Cancel</button>
+        <button type="submit">Add File</button>
+      </form>
+    </dialog>
     <% } %>
 
     <script>
-      const button = document.body.querySelector(".create-folder-btn");
-      button.addEventListener("click", () => {
-        const modal = document.body.querySelector(".modal");
+      const createFolderBtn = document.body.querySelector(".create-folder-btn");
+      createFolderBtn.addEventListener("click", () => {
+        const folderModal = document.body.querySelector(".folder-modal");
         // const folderName = document.body.querySelector("#folderName");
         // folderName.target.value = "";
-        modal.style.display = modal.style.display === "flex" ? "none" : "flex";
+        folderModal.style.display =
+          folderModal.style.display === "flex" ? "none" : "flex";
+      });
+
+      const addFileBtn = document.body.querySelector(".add-file-btn");
+      addFileBtn.addEventListener("click", () => {
+        const fileModal = document.body.querySelector(".file-modal");
+        // const folderName = document.body.querySelector("#folderName");
+        // folderName.target.value = "";
+        fileModal.style.display =
+          fileModal.style.display === "flex" ? "none" : "flex";
       });
     </script>
   </body>
