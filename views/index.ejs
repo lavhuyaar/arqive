@@ -10,8 +10,8 @@
     <h1>Hello world</h1>
     <% if(locals.user) { %>
     <h2><%= user.username %></h2>
-    <% if(locals.parentName) { %>
-    <h4><%= parentName %></h4>
+    <% if(locals.parentFolder) { %>
+    <h4><%= parentFolder.name %></h4>
     <% } else { %>
     <h4>Root</h4>
     <% } %><button class="create-folder-btn">Create Folder</button>
@@ -25,9 +25,15 @@
     <% } %>
 
     <div class="modal">
-      <form action="/create-folder" method="POST">
+      <form
+        action="/folder/<%= parentFolder ? parentFolder.id : 'root'%>/create"
+        method="POST"
+      >
         <label
-          >Folder Name<input type="text" name="folderName" id="folderName"
+          >Folder Name<input
+            type="text"
+            name="newFolderName"
+            id="newFolderName"
         /></label>
         <button type="submit">Add Folder</button>
         <button type="button">Cancel</button>

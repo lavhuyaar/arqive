@@ -11,7 +11,7 @@ exports.renderHomePage = async (req, res) => {
       parentId: null,
     },
   });
-  res.render("index", { user: req.user, folders: data });
+  res.render("index", { user: req.user, folders: data, parentFolder: null });
 };
 
 exports.renderLoginPage = (req, res) => res.render("login", { user: req.user });

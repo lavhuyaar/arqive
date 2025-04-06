@@ -29,64 +29,55 @@ exports.getFolderData = async (req, res) => {
     },
   });
 
+  //Renders the page with same data
   return res.render("index", {
     user: req.user,
     folders: nestedFolder,
-    parentName: folder.name,
+    parentFolder: folder,
   });
 };
 
-// exports.createFolder = async (req, res) => {
-//   const { folderId } = req.params;
-//   const { folderName } = req.body;
+exports.createFolder = async (req, res) => {
+  const { parentId } = req.params;
+  const { newFolderName } = req.body;
 
-//   //Later -> not req.user logic
+  //If User is not logged in
+  if (!req.user) res.redirect("/login");
 
-//   if (!folderId) {
-//     await prisma.folder.create({
-//       data: {
-//         name: folderName,
-//         userId: req.user.id,
-//         parentId: null,
-//       },
-//     });
-//     const rootFolders = await prisma.folder.findMany({
-//       where: {
-//         parentId: null,
-//         userId: req.user.id,
-//       },
-//     });
-//     return res.redirect("/", { user: req.user, folders: rootFolders });
-//   }
+  //If there exists no folder with id as parentId
+  if (!parentId) res.redirect("/"); //Redirects to home page
 
-//   const folderData = await prisma.folder.findFirst({
-//     where: {
-//       id: folderId,
-//     },
-//   });
+  // If creating a folder in root
+  if (parentId === "root") {
+    await prisma.folder.create({
+      data: {
+        name: newFolderName,
+        parentId: null,
+        userId: req.user.id,
+      },
+    });
+    return res.redirect("/"); //Redirects to home page
+  }
 
-//   if (!folderData) {
-//     const rootFolders = await prisma.folder.findMany({
-//       where: {
-//         parentId: null,
-//         userId: req.user.id,
-//       },
-//     });
-//     return res.redirect("/", { user: req.user, folders: rootFolders });
-//   }
+  //Checks if parentId is valid
+  const folder = await prisma.folder.findFirst({
+    //Gets folder with id as parentId
+    where: {
+      userId: req.user.id,
+      id: parentId,
+    },
+  });
 
-//   await prisma.folder.create({
-//     data: {
-//       userId: req.user.id,
-//       parentId: folderData.id,
-//       name: folderName,
-//     },
-//   });
-//   const folders = await prisma.folder.findMany({
-//     where: {
-//         userId: req.user.id,
-//         parentId: folderId
-//     }
-//   })
-//   return res.render("index", {user: req.user, folders: folders});
-// };
+  //If not valid, redirects to home page (might change later -> better error handling)
+  if (!folder) res.redirect("/");
+
+  //Else creates a new nested folder
+  await prisma.folder.create({
+    data: {
+      name: newFolderName,
+      parentId: folder.id,
+      userId: req.user.id,
+    },
+  });
+  return res.redirect(`/folder/${folder.id}`); //Redirects to the same page
+};
