@@ -5,8 +5,11 @@ const {
   createFolder,
   foldersToDelete,
   deleteFolders,
+  addFile,
+  getFiles,
 } = require("../db/queries");
-const e = require("express");
+const { decode } = require("base64-arraybuffer");
+const { supabase } = require("../supabase/supabase");
 
 exports.getFolderData = asyncHandler(async (req, res, next) => {
   const { folderId } = req.params;
@@ -22,12 +25,14 @@ exports.getFolderData = asyncHandler(async (req, res, next) => {
 
   //If folderId is valid, gets all nested folders of the folder
   const nestedFolders = await getNestedFolders(req.user.id, folderId);
+  const files = await getFiles(req.user.id, folderId);
 
   //Renders the page with same data
   return res.render("index", {
     user: req.user,
     folders: nestedFolders,
     parentFolder: folder,
+    files: files,
   });
 });
 
@@ -57,8 +62,52 @@ exports.createFolder = asyncHandler(async (req, res, next) => {
 
 exports.addFileToFolder = asyncHandler(async (req, res, next) => {
   const { file } = req;
+  const { folderId } = req.params;
 
-  return res.redirect("/");
+  if (!folderId) return res.redirect("/");
+
+  // decode file buffer to base64
+  const fileBase64 = decode(file.buffer.toString("base64"));
+
+  // upload the file to supabase
+  const { data, error } = await supabase.storage
+    .from("arqive")
+    .upload(file.originalname, fileBase64, {
+      contentType: file.mimetype,
+    });
+
+  if (error) {
+    console.error(error.message);
+    throw error;
+  }
+
+  // get public url of the uploaded file
+  const { data: image } = supabase.storage
+    .from("arqive")
+    .getPublicUrl(data.path);
+
+  // If creating a folder in root
+  if (folderId === "root") {
+    await addFile(
+      file.originalname,
+      file.size,
+      file.mimetype,
+      image.publicUrl,
+      req.user.id
+    );
+    return res.redirect("/"); //Redirects to home page
+  }
+
+  await addFile(
+    file.originalname,
+    file.size,
+    file.mimetype,
+    image.publicUrl,
+    req.user.id,
+    folderId
+  );
+
+  return res.redirect(`/folder/${folderId}`);
 });
 
 exports.deleteFolder = asyncHandler(async (req, res, next) => {

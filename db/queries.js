@@ -23,6 +23,19 @@ exports.createFolder = async (name, userId, parentId = null) => {
   });
 };
 
+exports.addFile = async (
+  name,
+  size,
+  fileType,
+  url,
+  userId,
+  folderId = null
+) => {
+  await prisma.file.create({
+    data: { name, size, fileType, url, userId, folderId },
+  });
+};
+
 // ------------READ QUERIES---------------
 
 exports.getUserById = async (id) => {
@@ -58,6 +71,16 @@ exports.getNestedFolders = async (userId, parentId) => {
     where: {
       userId,
       parentId,
+    },
+  });
+  return data;
+};
+
+exports.getFiles = async (userId, folderId) => {
+  const data = await prisma.file.findMany({
+    where: {
+      userId,
+      folderId,
     },
   });
   return data;

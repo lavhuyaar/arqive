@@ -33,12 +33,14 @@ model Folder {
 model File {
   id        String   @id @default(uuid())
   name      String
+  fileType  String
   createdAt DateTime @default(now())
+  size      Int
   url       String
   user      User     @relation(fields: [userId], references: [id])
   userId    String
-  folder    Folder   @relation(fields: [folderId], references: [id])
-  folderId  String
+  folder    Folder?   @relation(fields: [folderId], references: [id])
+  folderId  String?
 }
 
 model Session {

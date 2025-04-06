@@ -26,6 +26,13 @@
     <p>No folders</p>
     <% } %>
 
+    <% if(locals.files && locals.files.length > 0) { %> <%
+      files.forEach(function(file) { %>
+      <p><%=file.name%></p>
+      <% }) %> <% } else { %>
+      <p>No files</p>
+      <% } %>
+
     <dialog class="folder-modal">
       <form
         action="/folder/<%= parentFolder ? parentFolder.id : 'root'%>/create"
@@ -48,7 +55,7 @@
         method="POST"
         enctype="multipart/form-data"
       >
-        <input type="file" name="newFile" id="newFile" />
+        <input type="file" name="file" id="file" />
         <button type="button">Cancel</button>
         <button type="submit">Add File</button>
       </form>
