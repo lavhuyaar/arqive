@@ -1,4 +1,5 @@
 const { prisma } = require("../lib/prisma");
+const { supabase } = require("../supabase/supabase");
 
 // ------------CREATE QUERIES---------------
 
@@ -29,10 +30,11 @@ exports.addFile = async (
   fileType,
   url,
   userId,
+  bucketFileId,
   folderId = null
 ) => {
   await prisma.file.create({
-    data: { name, size, fileType, url, userId, folderId },
+    data: { name, size, fileType, url, userId, folderId, bucketFileId },
   });
 };
 
@@ -74,6 +76,16 @@ exports.getNestedFolders = async (userId, parentId) => {
     },
   });
   return data;
+};
+
+exports.getFile = async (id, userId) => {
+  const file = await prisma.file.findUnique({
+    where: {
+      id,
+      userId,
+    },
+  });
+  return file;
 };
 
 exports.getFiles = async (userId, folderId) => {
@@ -134,15 +146,59 @@ exports.foldersToDelete = async function deleteFolder(
   return idsToDelete; //Array of ids
 };
 
-exports.deleteFolders = async (folderIds) => {
-  const ids = folderIds.reverse(); //Makes sure that child folder is deleted first
-
+exports.deleteFolders = async (ids) => {
   //Deletes all the folders with id from ids array
   await Promise.all(
     ids.map((id) =>
       prisma.folder.deleteMany({
         where: {
           id,
+        },
+      })
+    )
+  );
+};
+
+exports.deleteFileFromFolder = async (id) => {
+  await prisma.file.delete({
+    where: {
+      id,
+    },
+  });
+};
+
+exports.deleteFilesFromIds = async (ids) => {
+  //Gets all the files to be deleted
+  const filesFromAllFolders = await Promise.all(
+    ids.map((id) =>
+      prisma.file.findMany({
+        where: {
+          folderId: id,
+        },
+      })
+    )
+  );
+
+  //Gets all the bucket file names and firstly removes all files from Supabase bucket
+  const filePathsToDelete = filesFromAllFolders
+    .flat()
+    .map((file) => `${file.name} ${file.bucketFileId}`); //Array of file names which is to be deleted from supabase as well
+
+  const { error } = await supabase.storage
+    .from("arqive")
+    .remove(filePathsToDelete);
+
+  if (error) {
+    console.error(error.message);
+    throw error;
+  }
+
+  //Finally removes all the files with folderId as any id of ids[]
+  await Promise.all(
+    ids.map((id) =>
+      prisma.file.deleteMany({
+        where: {
+          folderId: id,
         },
       })
     )

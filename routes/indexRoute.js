@@ -8,11 +8,10 @@ const {
   renderLoginPage,
   renderSignUpPage,
 } = require("../controllers/indexController");
-const { userLoggedIn } = require("../utils/userLoggedIn");
 
 const indexRoute = require("express").Router();
 
-indexRoute.get("/", userLoggedIn, renderHomePage);
+indexRoute.get("/", renderHomePage);
 indexRoute.get("/login", renderLoginPage);
 indexRoute.post("/login", loginUser);
 indexRoute.get("/sign-up", renderSignUpPage);
