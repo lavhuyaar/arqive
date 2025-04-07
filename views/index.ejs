@@ -10,11 +10,19 @@
     <h1>Hello world</h1>
     <% if(locals.user) { %>
     <h2><%= user.username %></h2>
-    <% if(locals.parentFolder) { %>
+    <!-- <% if(locals.parentFolder) { %>
     <h4><%= parentFolder.name %></h4>
     <% } else { %>
     <h4>Root</h4>
-    <% } %><button class="create-folder-btn">Create Folder</button>
+    <% } %> -->
+      <p><a href="/">root</a></p>
+      <% if(locals.breadcrumb && locals.breadcrumb.length > 0) { %>
+          <% for(let i = breadcrumb.length - 1; i >= 0; i--) { %>
+              <p>-> <a href="/folder/<%=breadcrumb[i].id%>"><%= breadcrumb[i].name %></a></p>
+         <% } %>
+     <% } %>
+    
+    <button class="create-folder-btn">Create Folder</button>
     <button class="add-file-btn">Add File</button>
 
     <% if(locals.folders && locals.folders.length > 0) { %> <%

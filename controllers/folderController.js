@@ -7,6 +7,7 @@ const {
   deleteFolders,
   addFile,
   getFiles,
+  getBreadCrumb,
 } = require("../db/queries");
 const { decode } = require("base64-arraybuffer");
 const { supabase } = require("../supabase/supabase");
@@ -27,12 +28,15 @@ exports.getFolderData = asyncHandler(async (req, res, next) => {
   const nestedFolders = await getNestedFolders(req.user.id, folderId);
   const files = await getFiles(req.user.id, folderId);
 
+  const breadcrumb = await getBreadCrumb(req.user.id, folder.id, []);
+
   //Renders the page with same data
   return res.render("index", {
     user: req.user,
     folders: nestedFolders,
     parentFolder: folder,
     files: files,
+    breadcrumb,
   });
 });
 

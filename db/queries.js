@@ -89,22 +89,21 @@ exports.getFiles = async (userId, folderId) => {
 exports.getBreadCrumb = async function getBreadCrumb(
   userId,
   folderId,
-  parentId,
   arr = []
 ) {
-  if (!parentId || !folderId || !userId) {
-    //If user is not logged in, or folderId is invalid, or parentId is null (root folder)
-    return arr; //Breaks recursion;  Returns array with folders (child -> parent)
-  }
   const data = await prisma.folder.findFirst({
     where: {
       userId,
       id: folderId,
-      parentId,
     },
   });
-  arr.push(data);
-  await getBreadCrumb(data.userId, data.id, data.parentId, arr); //Recursion
+  if (!data.parentId) {
+    arr.push(data);
+    return arr;
+  } else {
+    arr.push(data);
+    return await getBreadCrumb(data.userId, data.parentId, arr); //Recursion
+  }
 };
 
 // ------------UPDATE QUERIES---------------
