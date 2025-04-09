@@ -120,6 +120,18 @@ exports.getBreadCrumb = async function getBreadCrumb(
 
 // ------------UPDATE QUERIES---------------
 
+exports.changeFolderName = async (name, folderId, userId) => {
+  await prisma.folder.update({
+    where: {
+      id: folderId,
+      userId,
+    },
+    data: {
+      name,
+    },
+  });
+};
+
 // ------------DELETE QUERIES---------------
 
 //Returns an array of the folder to delete as well as all of it's deeply nested folders
@@ -184,13 +196,15 @@ exports.deleteFilesFromIds = async (ids) => {
     .flat()
     .map((file) => `${file.name} ${file.bucketFileId}`); //Array of file names which is to be deleted from supabase as well
 
-  const { error } = await supabase.storage
-    .from("arqive")
-    .remove(filePathsToDelete);
+  if (filePathsToDelete.length > 0) {
+    const { error } = await supabase.storage
+      .from("arqive")
+      .remove(filePathsToDelete);
 
-  if (error) {
-    console.error(error.message);
-    throw error;
+    if (error) {
+      console.error(error.message);
+      throw error;
+    }
   }
 
   //Finally removes all the files with folderId as any id of ids[]

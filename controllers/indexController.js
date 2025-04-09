@@ -1,8 +1,7 @@
-const { getNestedFolders, getFiles } = require("../db/queries");
 const asyncHandler = require("express-async-handler");
 
 exports.renderHomePage = asyncHandler(async (req, res, next) => {
-  res.render("index");
+  res.render("index", { user: req.user });
 });
 
 exports.renderLoginPage = asyncHandler(async (req, res, next) =>
@@ -10,5 +9,5 @@ exports.renderLoginPage = asyncHandler(async (req, res, next) =>
 );
 
 exports.renderSignUpPage = asyncHandler(async (req, res, next) =>
-  res.render("sign-up")
+  res.render("sign-up", { user: req.user })
 );

@@ -7,31 +7,33 @@
     <link rel="stylesheet" href="/css/style.css" />
   </head>
   <body>
-    <main>
-      <form action="/sign-up" method="POST">
+    <%- include("partials/navbar.ejs") %>
+    <main class="signup-container">
+      <form action="/sign-up" method="POST" autocomplete="off">
         <label
-          >First Name: <input type="text" name="firstName" id="firstName"
+          >First Name <input type="text" name="firstName" id="firstName"
         /></label>
         <label
-          >Last Name: <input type="text" name="lastName" id="lastName"
+          >Last Name <input type="text" name="lastName" id="lastName"
         /></label>
         <label
-          >Username: <input type="text" name="username" id="username"
+          >Username <input type="text" name="username" id="username"
         /></label>
         <label
-          >Password:<input
+          >Password<input
             type="password"
             name="password"
             id="password" /></label
         ><label
-          >Confirm Password:<input
+          >Confirm Password<input
             type="password"
             name="confirm_password"
             id="confirm_password"
         /></label>
-        <button type="submit">Sign up</button>
+        <button class="btn" type="submit">Sign up</button>
       </form>
-      <p>Don't have an account? <a href="/login">Login</a></p>
+      <p>Already have an account? <a href="/login">Login</a></p>
     </main>
+    <%- include("partials/footer.ejs") %>
   </body>
 </html>

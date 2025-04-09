@@ -3,88 +3,149 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Arqive - Folder</title>
+    <title><%= locals.title %></title>
     <link rel="stylesheet" href="/css/style.css" />
   </head>
   <body>
-    <h1>Hello world</h1>
-    <% if(locals.user) { %>
-    <h2><%= user.username %></h2>
-      <p><a href="/folder">root</a></p>
-      <% if(locals.breadcrumb && locals.breadcrumb.length > 0) { %>
-          <% for(let i = breadcrumb.length - 1; i >= 0; i--) { %>
-              <p>-> <a href="/folder/<%=breadcrumb[i].id%>"><%= breadcrumb[i].name %></a></p>
-         <% } %>
-     <% } %>
-    
-    <button class="create-folder-btn">Create Folder</button>
-    <button class="add-file-btn">Add File</button>
+    <%- include("partials/navbar.ejs") %>
 
-    <% if(locals.folders && locals.folders.length > 0) { %> <%
-    folders.forEach(function(folder) { %>
-    <p><%=folder.name%></p>
-    <a href="/folder/<%=folder.id%>">Open</a>
-    <a href="/folder/<%=folder.id%>/delete">Delete</a>
-    <% }) %> <% } else { %>
-    <p>No folders</p>
-    <% } %>
+    <main class="container">
+      <% if(locals.user) { %>
+      <section class="breadcrumb">
+        <p><a href="/folder">:root</a></p>
+        <% if(locals.breadcrumb && locals.breadcrumb.length > 0) { %> <% for(let
+        i = breadcrumb.length - 1; i >= 0; i--) { %>
+        <p>
+          <img src="/svg/right-arrow.svg" alt="" />
+          <a href="/folder/<%=breadcrumb[i].id%>"><%= breadcrumb[i].name %></a>
+        </p>
+        <% } %> <% } %>
+      </section>
 
-    <% if(locals.files && locals.files.length > 0) { %> <%
-      files.forEach(function(file) { %>
-        <img style="width: 100px;" src="<%= file.url%>" alt="image 1" />
-      <p><%=file.name%></p>
-      <a href="/folder/<%=file.id%>/delete-file">Delete</a>
-      <% }) %> <% } else { %>
-      <p>No files</p>
+      <section class="folders-section">
+        <div class="folders-heading">
+          <h2>Folders</h2>
+          <a
+            class="btn-link"
+            href="/folder/<%= parentFolder ? parentFolder.id : 'root'%>/create"
+            >Create Folder</a
+          >
+        </div>
+        <div class="folders">
+          <% if(locals.folders && locals.folders.length > 0) { %> <%
+          folders.forEach(function(folder) { %>
+          <div class="folder">
+            <a class="folder-icon" href="/folder/<%= folder.id %>"
+              ><img
+                src="/images/folder-icon.png"
+                width="40px"
+                alt="<%=folder.name%>"
+            /></a>
+            <p title="<%= folder.name %>"><%=folder.name%></p>
+            <div>
+              <button
+                onclick="showModal({id: '<%=folder.id%>', name: '<%= folder.name %>',type: 'folder', createdAt:  '<%=folder.createdAt%>'})"
+                class="more-info-btn"
+                title="More Info"
+              >
+                <img src="/svg/more-info.svg" alt="More Info" />
+              </button>
+              <a title="Edit" href="/folder/<%= folder.id %>/edit"
+                ><img src="/svg/edit.svg" alt="Edit"
+              /></a>
+              <a title="Delete" href="/folder/<%=folder.id %>/delete"
+                ><img src="/svg/delete.svg" alt="Delete"
+              /></a>
+            </div>
+          </div>
+
+          <% }) %> <% } else { %>
+          <p>No folders</p>
+          <% } %>
+        </div>
+      </section>
+
+      <section class="files-section">
+        <div class="files-heading">
+          <h2>Files</h2>
+          <a
+            href="/folder/<%= parentFolder ? parentFolder.id : 'root'%>/add-file "
+            class="btn-link"
+            >Add File</a
+          >
+        </div>
+        <div class="files">
+          <% if(locals.files && locals.files.length > 0) { %> <%
+          files.forEach(function(file) { %>
+          <div class="file">
+            <img
+              class="file-image"
+              src="<%= file.url%>"
+              alt="<%= file.name%>"
+            />
+            <p title="<%= file.name %>"><%=file.name%></p>
+            <div>
+              <button
+                onclick="showModal({id: '<%=file.id%>', name: '<%= file.name %>',type: '<%=file.fileType%>', url: '<%= file.url%>', createdAt:  '<%=file.createdAt%>'})"
+                class="more-info-btn"
+                title="More Info"
+              >
+                <img src="/svg/more-info.svg" alt="More Info" />
+              </button>
+              <a title="Download" href="/folder/<%=file.id%>/download" download=""
+                ><img src="/svg/download.svg" alt="Download"
+              /></a>
+
+              <a title="Delete" href="/folder/<%=file.id%>/delete-file"
+                ><img src="/svg/delete.svg" alt="Delete"
+              /></a>
+            </div>
+          </div>
+          <% }) %> <% } else { %>
+          <p>No files</p>
+          <% } %>
+        </div>
+      </section>
+
+      <div class="more-info-modal">
+        <button onclick="closeModal()" class="close-modal-btn">
+          <img src="/svg/cross.svg" alt="Close" />
+        </button>
+        <div class="info">
+          <h4 class="info-name"></h4>
+        </div>
+      </div>
+
+      <!-- <dialog class="folder-modal">
+        <form
+          action="/folder/<%= parentFolder ? parentFolder.id : 'root'%>/create"
+          method="POST"
+        >
+          <label
+            >Folder Name<input
+              type="text"
+              name="newFolderName"
+              id="newFolderName"
+          /></label>
+          <button type="button" class="cancel-btn">Cancel</button>
+          <button type="submit">Add Folder</button>
+        </form>
+      </dialog>
+
+      <dialog class="file-modal">
+        <form
+          action="/folder/<%= parentFolder ? parentFolder.id : 'root'%>/add-file"
+          method="POST"
+          enctype="multipart/form-data"
+        >
+          <input type="file" name="file" id="file" />
+          <button type="button">Cancel</button>
+          <button type="submit">Add File</button>
+        </form>
+      </dialog> -->
       <% } %>
+    </main>
 
-    <dialog class="folder-modal">
-      <form
-        action="/folder/<%= parentFolder ? parentFolder.id : 'root'%>/create"
-        method="POST"
-      >
-        <label
-          >Folder Name<input
-            type="text"
-            name="newFolderName"
-            id="newFolderName"
-        /></label>
-        <button type="button" class="cancel-btn">Cancel</button>
-        <button type="submit">Add Folder</button>
-      </form>
-    </dialog>
-
-    <dialog class="file-modal">
-      <form
-        action="/folder/<%= parentFolder ? parentFolder.id : 'root'%>/add-file"
-        method="POST"
-        enctype="multipart/form-data"
-      >
-        <input type="file" name="file" id="file" />
-        <button type="button">Cancel</button>
-        <button type="submit">Add File</button>
-      </form>
-    </dialog>
-    <% } %>
-
-    <script>
-      const createFolderBtn = document.body.querySelector(".create-folder-btn");
-      createFolderBtn.addEventListener("click", () => {
-        const folderModal = document.body.querySelector(".folder-modal");
-        // const folderName = document.body.querySelector("#folderName");
-        // folderName.target.value = "";
-        folderModal.style.display =
-          folderModal.style.display === "flex" ? "none" : "flex";
-      });
-
-      const addFileBtn = document.body.querySelector(".add-file-btn");
-      addFileBtn.addEventListener("click", () => {
-        const fileModal = document.body.querySelector(".file-modal");
-        // const folderName = document.body.querySelector("#folderName");
-        // folderName.target.value = "";
-        fileModal.style.display =
-          fileModal.style.display === "flex" ? "none" : "flex";
-      });
-    </script>
+    <%- include("partials/footer.ejs") %> <%- include("partials/script.ejs") %>
   </body>
 </html>

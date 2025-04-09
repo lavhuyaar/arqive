@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="/css/style.css" />
+    <title><%= locals.title %></title>
+  </head>
+  <body>
+    <%- include("partials/navbar.ejs") %>
+    <main>
+      <% if(locals.subTitle) { %>
+      <h1><%= subTitle %></h1>
+      <%} %> 
+      <form
+        action="/folder/<%= parentFolder ? parentFolder.id : 'root'%>/add-file"
+        method="POST"
+        enctype="multipart/form-data"
+      >
+        <label><input type="file" name="file" required /></label>
+        <a
+          href="/folder/<%= parentFolder ? parentFolder.id : '' %>"
+          class="btn-link"
+          >Cancel</a
+        >
+        <button type="submit">Add File</button>
+      </form>
+
+    </main>
+    <%- include("partials/footer.ejs") %>
+  </body>
+</html>

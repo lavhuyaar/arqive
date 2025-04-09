@@ -7,21 +7,26 @@
     <title>Arqive - Login</title>
   </head>
   <body>
-    <main>
+    <%- include("partials/navbar.ejs") %>
+    <main class="login-container">
       <% if(locals.user) { %>
-      <h1>You are already logged in <a href="/logout">Logout</a></h1>
+      <p>Hey <%= user.firstName%> <%= user.lastName%>, you're already logged in!</p>
+      <a class="btn-link" href="/logout">Logout</a>
       <% } else { %>
-      <form action="/login" method="POST">
+      <form action="/login" method="POST" autocomplete="off">
         <label for="username"
-          >Username: <input type="text" name="username" id="username"
+          >Username <input type="text" name="username" id="username"
         /></label>
         <label for="password"
-          >Password: <input type="password" name="password" id="password"
+          >Password <input type="password" name="password" id="password"
         /></label>
-        <button type="submit">Login</button>
+        <button class="btn" type="submit">Login</button>
       </form>
-      <p>Don't have an account? <a href="/sign-up">Sign up</a></p>
+      <p>
+        Don't have an account? <a class="sign-up-btn" href="/sign-up">Sign up</a>
+      </p>
       <% } %>
     </main>
+    <%- include("partials/footer.ejs") %>
   </body>
 </html>

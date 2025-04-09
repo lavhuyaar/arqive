@@ -1,4 +1,6 @@
 const asyncHandler = require("express-async-handler");
+const fs = require("fs/promises");
+const path = require("node:path");
 const {
   getFolder,
   getNestedFolders,
@@ -11,6 +13,7 @@ const {
   getFile,
   deleteFileFromFolder,
   deleteFilesFromIds,
+  changeFolderName,
 } = require("../db/queries");
 const { decode } = require("base64-arraybuffer");
 const { supabase } = require("../supabase/supabase");
@@ -21,6 +24,7 @@ exports.getRootFolder = asyncHandler(async (req, res, next) => {
   const files = await getFiles(req.user.id, null);
 
   res.render("folder", {
+    title: "Arqive - root",
     user: req.user,
     folders: folders,
     parentFolder: null,
@@ -48,6 +52,7 @@ exports.getFolderData = asyncHandler(async (req, res, next) => {
 
   //Renders the page with same data
   return res.render("folder", {
+    title: `Arqive - ${folder.name}`,
     user: req.user,
     folders: nestedFolders,
     parentFolder: folder,
@@ -58,7 +63,7 @@ exports.getFolderData = asyncHandler(async (req, res, next) => {
 
 exports.createFolder = asyncHandler(async (req, res, next) => {
   const { parentId } = req.params;
-  const { newFolderName } = req.body;
+  const newFolderName = req.body.newFolderName.trim();
 
   //If there exists no folder with id as parentId
   if (!parentId) return res.redirect("/folder"); //Redirects to home page
@@ -180,3 +185,106 @@ exports.deleteFile = asyncHandler(async (req, res, next) => {
     return res.redirect(`/folder/${folderId}`);
   } else return res.redirect("/folder");
 });
+
+exports.renderAddFolderPage = asyncHandler(async (req, res, next) => {
+  const { parentId } = req.params;
+
+  if (parentId === "root") {
+    return res.render("addEditFolder", {
+      title: "Arqive - Create folder",
+      subTitle: "Create a new folder",
+      isEdit: false,
+      parentFolder: null,
+      user: req.user,
+    });
+  }
+
+  const parentFolder = await getFolder(req.user.id, parentId);
+
+  if (!parentFolder) return res.redirect("/folder");
+
+  return res.render("addEditFolder", {
+    title: "Arqive - Create folder",
+    subTitle: "Create a new folder",
+    isEdit: false,
+    parentFolder,
+    user: req.user,
+  });
+});
+
+exports.renderAddFilePage = asyncHandler(async (req, res, next) => {
+  const parentId = req.params.folderId;
+
+  if (parentId === "root") {
+    return res.render("addFile", {
+      title: "Arqive - Add file",
+      subTitle: "Add a new file",
+      parentFolder: null,
+      user: req.user,
+    });
+  }
+
+  const folder = await getFolder(req.user.id, parentId);
+
+  if (!folder) return res.redirect("/folder");
+
+  return res.render("addFile", {
+    title: "Arqive - Add file",
+    subTitle: "Add a new file",
+    parentFolder: folder,
+    user: req.user,
+  });
+});
+
+exports.renderEditFolderPage = asyncHandler(async (req, res, next) => {
+  const { folderId } = req.params;
+
+  const folder = await getFolder(req.user.id, folderId);
+
+  if (!folder) return res.redirect("/folder");
+
+  return res.render("addEditFolder", {
+    title: `Arqive - Edit ${folder.name}`,
+    subTitle: "Edit folder name",
+    folder: folder,
+    isEdit: true,
+    user: req.user,
+  });
+});
+
+exports.editFolder = asyncHandler(async (req, res, next) => {
+  const { folderId } = req.params;
+  const newFolderName = req.body.newFolderName.trim();
+
+  const folder = await getFolder(req.user.id, folderId);
+
+  if (!folder) return res.redirect("/folder");
+
+  await changeFolderName(newFolderName, folder.id, req.user.id);
+
+  return res.redirect(`/folder/${folder.parentId ?? ""}`);
+});
+
+  exports.downloadFile = asyncHandler(async (req, res, next) => {
+    const { fileId } = req.params;
+
+    const file = await getFile(fileId, req.user.id);
+    if (!file) return res.redirect("/folder");
+
+    const { data, error } = await supabase.storage
+      .from("arqive")
+      .download(`${file.name} ${file.bucketFileId}`);
+
+    if (error) {
+      console.error(error.message);
+      throw error;
+    }
+
+    const arrayBuffer = await data.arrayBuffer();
+    const buffer = Buffer.from(arrayBuffer);
+
+    res.setHeader('Content-Disposition', `attachment; filename="${file.name}"`);
+    res.setHeader('Content-Type', file.fileType);
+    res.send(buffer);
+
+  });

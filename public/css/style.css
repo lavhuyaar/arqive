@@ -1,4 +1,5 @@
 @import url("https://fonts.googleapis.com/css2?family=Commissioner:wght@100..900&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Passions+Conflict&display=swap");
 
 * {
   box-sizing: border-box;
@@ -10,9 +11,337 @@ body {
   background-color: #121212;
   color: white;
   font-family: "Commissioner", sans-serif;
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+header {
+  width: 100%;
+  max-width: 1500px;
+  height: 60px;
+  z-index: 9999;
+  position: sticky;
+  display: flex;
+  align-items: center;
+  background-image: linear-gradient(to right, #1a1a1a, #1f1f1f);
+  top: 0;
+}
+
+nav {
+  padding: 0 20px;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.buttons {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.btn-link {
+  padding: 5px 10px 7px 10px;
+  text-decoration: none;
+  font-size: 1rem;
+  color: white;
+  border: 1px solid #ffffff3d;
+
+  border-radius: 4px;
+  background-color: #121212;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &:hover {
+    background-color: #242424;
+    transition: background-color 300ms ease-in-out;
+  }
+}
+
+main {
+  max-width: 1500px;
+  border-radius: 4px;
+  position: relative;
+  width: calc(100% - 20px);
+  margin: 10px;
+  border: 1px solid rgba(128, 128, 128, 0.356);
+  height: calc(100vh - 120px);
+  overflow-y: auto;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+footer {
+  padding: 0 20px 20px 20px;
+  text-align: center;
+  width: 100%;
+  font-size: 0.9rem;
+}
+
+button {
+  font-family: "Commissioner", sans-serif;
 }
 
 .modal {
   position: fixed;
   display: none;
+}
+
+.folder,
+.file {
+  padding: 8px;
+  font-size: 0.9rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: #242424;
+  border-radius: 4px;
+  width: 130px;
+  gap: 8px;
+
+  &:hover {
+    background-color: rgb(73, 72, 72);
+    transition: background-color 300ms ease-in-out;
+  }
+}
+
+.folder > div,
+.file > div {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  align-self: flex-end;
+}
+
+.folders-section,
+.files-section {
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+  padding: 10px 20px;
+  gap: 20px;
+  width: 100%;
+}
+
+.folders-section h2,
+.files-section h2 {
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+.folders-heading,
+.files-heading {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 30px;
+  justify-content: space-between;
+}
+
+.folders-heading > .btn-link,
+.files-heading > .btn-link {
+  font-size: 0.8rem;
+  padding: 5px 10px;
+}
+
+.folders,
+.files {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  overflow-x: auto;
+  width: 100%;
+  text-align: center;
+  min-height: 50px;
+  gap: 10px;
+}
+
+.folder-icon,
+.file-icon {
+  padding: 20px;
+  width: 100%;
+  height: 85px;
+  border-radius: 4px;
+  background-color: #121212;
+}
+
+.folder > p,
+.file > p {
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 100%;
+  text-align: start;
+  padding-left: 1px;
+}
+
+.file-image {
+  width: 100%;
+  height: 85px;
+  border-radius: 4px;
+  object-fit: cover;
+  object-position: center;
+}
+
+.breadcrumb {
+  display: flex;
+  align-items: center;
+  font-size: 1rem;
+  gap: 10px;
+  padding: 5px 20px 10px 20px;
+  flex-wrap: wrap;
+  background-color: #242424;
+  position: sticky;
+  top: 0;
+}
+
+.breadcrumb a {
+  color: white;
+  text-decoration: none;
+
+  &:hover {
+    color: gray;
+    transition: color 200ms ease-in-out;
+  }
+}
+
+.breadcrumb > p {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.logo {
+  font-weight: 400;
+}
+
+.logo > a {
+  font-size: 2.9rem;
+  font-family: "Passions Conflict", "Commissioner", sans-serif;
+  text-decoration: none;
+  color: white;
+}
+
+.more-info-btn {
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+}
+
+.more-info-modal {
+  background: #242424;
+  display: none;
+  flex-direction: column;
+  position: absolute;
+  float: left;
+  left: 50%;
+  top: 50%;
+  max-width: 350px;
+  width: 80%;
+  padding: 20px;
+  border-radius: 4px;
+  border: none;
+  transform: translate(-50%, -50%);
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 10px;
+}
+
+label {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  font-size: 0.9rem;
+}
+
+input {
+  padding: 6px 10px;
+  border-radius: 4px;
+  border: none;
+  background-color: #121212;
+  color: white;
+  border: 1px solid #ffffff3d;
+  &:focus {
+    outline: none;
+    box-shadow: 0 2px 1px gray;
+    transition: box-shadow 200ms ease-in-out;
+  }
+}
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover, 
+input:-webkit-autofill:focus, 
+input:-webkit-autofill:active{
+    -webkit-box-shadow: 0 0 0 30px #121212 inset !important;
+    -webkit-text-fill-color: white !important;
+    -webkit-outline: none !important;
+}
+
+.btn {
+  padding: 5px 10px;
+  font-size: 1.1rem;
+  border-radius: 4px;
+  background-color: #121212;
+  border: 1px solid #ffffff3d;
+  color: white;
+  margin-top: 10px;
+  cursor: pointer;
+
+  &:hover {
+    background-color: #242424;
+    transition: background-color 300ms ease-in-out;
+  }
+}
+
+.login-container,
+.signup-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  flex-direction: column;
+  padding: 20px;
+}
+
+.more-info-modal > .info {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.more-info-modal > .info > p {
+  font-size: 12px;
+  align-self: end;
+}
+
+.close-modal-btn {
+  align-self: end;
+  padding: 4px 5px;
+  cursor: pointer;
+  background-color: transparent;
+  border: none;
+  z-index: 999;
+
+  &:hover {
+    color: gray;
+    transition: fill 300ms ease-in-out;
+  }
+}
+.modal-image {
+  width: 100%;
+  height: 130px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }

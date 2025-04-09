@@ -1,0 +1,75 @@
+<script defer>
+  const modal = document.querySelector(".more-info-modal");
+  const moreInfoBtns = document.querySelectorAll(".more-info-btn");
+
+  //Closes Info Modal when clicked anywhere other than the Modal itself and More Info button
+  document.body.addEventListener("click", (e) => {
+    const data = Array.from(moreInfoBtns).some((btn) => btn.contains(e.target));
+
+    if (!data && !modal.contains(e.target)) {
+      modal.style.display = "none";
+    }
+  });
+
+  //Formats Date
+  const getDate = (dateString) => {
+    const date = new Date(dateString);
+
+    const formattedDate = date.toLocaleDateString();
+    const formattedTime = date.toLocaleTimeString();
+
+    return [formattedDate, formattedTime];
+  };
+
+  const imageTypes = [
+    "image/jpeg",
+    "image/png",
+    "image/jpg",
+    "image/webp",
+    "image/avif",
+  ];
+  const otherFileTypes = [];
+
+  //Displays modal with dynamic data (info)
+  const showModal = (data) => {
+    console.log(data);
+
+    const [date, time] = getDate(data.createdAt);
+
+    modal.innerHTML = "";
+    modal.innerHTML = `<button onclick="closeModal()" class="close-modal-btn">
+          <img src="/svg/cross.svg" alt="Close" />
+        </button>
+        <div class="info">
+            <div class="modal-image">
+                <img
+                src=${
+                  imageTypes.some((t) => t === data.type)
+                    ? data.url
+                    : "/images/folder-icon.png"
+                }
+                width=${
+                  data.type === "folder" ||
+                  otherFileTypes.some((t) => t === data.type)
+                    ? "40px"
+                    : "100%"
+                }
+                alt=${data.name}
+            /></div>
+          <h4 class="info-name">${data.name}</h4>
+          ${
+            data.url
+              ? `<a title="Download" class="btn-link" href="/folder/${data.id}/download" download="" />Download</a>`
+              : ""
+          }
+
+           <p>${
+             data.type === "folder" ? "Created at " : "Added at "
+           } ${time} on ${date} </p>
+        </div>`;
+
+    modal.style.display = "flex";
+  };
+
+  const closeModal = () => (modal.style.display = "none");
+</script>

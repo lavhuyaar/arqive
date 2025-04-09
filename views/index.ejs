@@ -9,7 +9,12 @@
     </head>
   </head>
   <body>
-    <h1>Home</h1>
-    <a href="/folder">Root</a>
+    <%- include("partials/navbar.ejs") %>
+
+    <main class="home">
+      <h1>Home</h1>
+      <a href="/folder">Root</a>
+    </main>
+    <%- include("partials/footer.ejs") %>
   </body>
 </html>

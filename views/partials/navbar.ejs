@@ -1,0 +1,13 @@
+<header>
+  <nav>
+    <h1 class="logo"><a href="/"> Arqive </a></h1>
+    <div class="buttons">
+      <% if(locals.user) { %>
+      <a class="btn-link" href="/logout">Logout</a>
+      <%} else { %>
+      <a class="btn-link" href="/login">Login</a>
+      <a class="btn-link" href="/sign-up">Sign up</a>
+      <% } %>
+    </div>
+  </nav>
+</header>
