@@ -1,43 +1,56 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="/css/style.css" />
+    <link rel="icon" href="/images/arqive-meta.png">
     <title><%= locals.title %></title>
-</head>
-<body>
+  </head>
+  <body>
     <%- include("partials/navbar.ejs") %>
-    <main>
-      <% if(locals.subTitle) { %>
+    <main class="add-edit-folder-container">
+      <%- include("partials/errors.ejs") %> <% if(locals.subTitle) { %>
       <h1><%= subTitle %></h1>
       <%} %> <% if(locals.isEdit === false) { %>
       <form
         action="/folder/<%= parentFolder ? parentFolder.id : 'root'%>/create"
         method="POST"
       >
-        <label><input type="text" name="newFolderName" required /></label>
-        <a
-          href="/folder/<%= parentFolder ? parentFolder.id : 'root' %>"
-          class="btn-link"
-          >Cancel</a
-        >
-        <button type="submit">Create new folder</button>
+        <label>Folder name<input type="text" name="newFolderName" /></label>
+        <div class="buttons">
+          <a
+            href="/folder/<%= parentFolder ? parentFolder.id : '' %>"
+            class="btn-link"
+            >Cancel</a
+          >
+          <button type="submit" class="btn-link">Create new folder</button>
+        </div>
       </form>
       <% } else { %>
 
-      <form action="/folder/<%= folder.id ? folder.id : 'root'%>/edit" method="POST">
-        <label>Name<input type="text" name="newFolderName" value="<%= folder.name %>" required/></label>
-        <a
-          href="/folder/<%= folder.parentId ? folder.parentId : 'root' %>"
-          class="btn-link"
-          >Cancel</a
-        >
-        <button type="submit">Change folder name</button>
+      <form
+        action="/folder/<%= folder.id ? folder.id : 'root'%>/edit"
+        method="POST"
+      >
+        <label
+          >Name<input
+            type="text"
+            name="newFolderName"
+            value="<%= folder.name %>"
+        /></label>
+        <div class="buttons">
+          <a
+            href="/folder/<%= folder.parentId ? folder.parentId : '' %>"
+            class="btn-link"
+            >Cancel</a
+          >
+          <button type="submit" class="btn-link">Change folder name</button>
+        </div>
       </form>
 
       <% } %>
     </main>
     <%- include("partials/footer.ejs") %>
-</body>
+  </body>
 </html>

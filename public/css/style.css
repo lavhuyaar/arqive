@@ -17,6 +17,14 @@ body {
   flex-direction: column;
   align-items: center;
 }
+
+h1 {
+  font-weight: 500;
+  text-align: center;
+}
+
+/* ------------Navbar-------------- */
+
 header {
   width: 100%;
   max-width: 1500px;
@@ -25,16 +33,125 @@ header {
   position: sticky;
   display: flex;
   align-items: center;
-  background-image: linear-gradient(to right, #1a1a1a, #1f1f1f);
+  background-color: #121212;
   top: 0;
 }
 
 nav {
-  padding: 0 20px;
+  padding: 0 10px 0 20px;
   width: 100%;
   display: flex;
   justify-content: space-between;
   align-items: center;
+}
+
+.logo {
+  font-family: "Passions Conflict", "Commissioner", sans-serif;
+  text-decoration: none;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.logo img {
+  object-fit: contain;
+  padding-top: 5px;
+  object-position: center;
+}
+
+/* ------------Main-------------- */
+
+main {
+  max-width: 1500px;
+  border-radius: 4px;
+  position: relative;
+  width: calc(100% - 20px);
+  margin: 10px;
+  border: 1px solid rgba(128, 128, 128, 0.356);
+  min-height: calc(100vh - 120px);
+  overflow-y: auto;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  justify-content: center;
+  padding: 20px;
+  gap: 10px;
+}
+
+.container {
+  display: block;
+  padding: 0;
+}
+
+.login-container,
+.signup-container {
+  gap: 10px;
+}
+
+.add-file-container,
+.add-edit-folder-container {
+  gap: 40px !important;
+}
+
+.add-file-container .buttons,
+.add-edit-folder-container .buttons {
+  justify-content: center;
+}
+
+.add-file-container .btn-link,
+.add-edit-folder-container .btn-link {
+  padding: 5px 15px !important;
+}
+
+.errors-container {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.not-found-container h1 {
+  font-weight: 700;
+  font-size: 4rem;
+  text-align: center;
+}
+
+.not-found-container h2 {
+  font-weight: 400;
+  font-size: 1.5rem;
+  text-align: center;
+}
+
+/* ------------Footer-------------- */
+
+footer {
+  padding: 0 20px 20px 20px;
+  text-align: center;
+  width: 100%;
+  font-size: 0.9rem;
+}
+
+/* ------------Button and Links-------------- */
+
+button {
+  font-family: "Commissioner", sans-serif;
+}
+
+.btn {
+  padding: 5px 10px;
+  font-size: 1.1rem;
+  border-radius: 4px;
+  background-color: #121212;
+  border: 1px solid #ffffff3d;
+  color: white;
+  margin-top: 10px;
+  cursor: pointer;
+
+  &:hover {
+    background-color: #242424;
+    transition: background-color 300ms ease-in-out;
+  }
 }
 
 .buttons {
@@ -63,59 +180,17 @@ nav {
   }
 }
 
-main {
-  max-width: 1500px;
-  border-radius: 4px;
-  position: relative;
-  width: calc(100% - 20px);
-  margin: 10px;
-  border: 1px solid rgba(128, 128, 128, 0.356);
-  height: calc(100vh - 120px);
-  overflow-y: auto;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-}
-
-footer {
-  padding: 0 20px 20px 20px;
-  text-align: center;
-  width: 100%;
-  font-size: 0.9rem;
-}
-
-button {
-  font-family: "Commissioner", sans-serif;
-}
-
-.modal {
-  position: fixed;
-  display: none;
-}
-
-.folder,
-.file {
-  padding: 8px;
-  font-size: 0.9rem;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  background-color: #242424;
-  border-radius: 4px;
-  width: 130px;
-  gap: 8px;
+.normal-link {
+  color: white;
+  text-decoration: underline;
 
   &:hover {
-    background-color: rgb(73, 72, 72);
-    transition: background-color 300ms ease-in-out;
+    color: gray;
+    transition: color 150ms ease-in-out;
   }
 }
 
-.folder > div,
-.file > div {
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  align-self: flex-end;
-}
+/* ------------Folders and Files-------------- */
 
 .folders-section,
 .files-section {
@@ -160,15 +235,31 @@ button {
   gap: 10px;
 }
 
-.folder-icon,
-.file-icon {
-  padding: 20px;
-  width: 100%;
-  height: 85px;
+.folder,
+.file {
+  padding: 8px;
+  font-size: 0.9rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: #242424;
   border-radius: 4px;
-  background-color: #121212;
+  width: 130px;
+  gap: 8px;
+
+  &:hover {
+    background-color: rgb(73, 72, 72);
+    transition: background-color 300ms ease-in-out;
+  }
 }
 
+.folder > div,
+.file > div {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  align-self: flex-end;
+}
 .folder > p,
 .file > p {
   font-weight: 600;
@@ -180,6 +271,15 @@ button {
   padding-left: 1px;
 }
 
+.folder-icon,
+.file-icon {
+  padding: 20px;
+  width: 100%;
+  height: 85px;
+  border-radius: 4px;
+  background-color: #121212;
+}
+
 .file-image {
   width: 100%;
   height: 85px;
@@ -187,6 +287,88 @@ button {
   object-fit: cover;
   object-position: center;
 }
+
+/* ------------Modal-------------- */
+
+.more-info-btn {
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+}
+
+.more-info-modal {
+  background: #242424;
+  display: none;
+  flex-direction: column;
+  position: absolute;
+  float: left;
+  left: 50%;
+  top: 50%;
+  max-width: 350px;
+  width: 80%;
+  padding: 20px;
+  border-radius: 4px;
+  border: none;
+  z-index: 999999;
+  transform: translate(-50%, -50%);
+}
+
+.modal {
+  position: fixed;
+  display: none;
+}
+
+.more-info-modal > .info {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.more-info-modal > .info > p {
+  font-size: 12px;
+  align-self: end;
+}
+
+.close-modal-btn {
+  align-self: end;
+  padding: 4px 5px;
+  cursor: pointer;
+  background-color: transparent;
+  border: none;
+  z-index: 999;
+
+  &:hover {
+    color: gray;
+    transition: fill 300ms ease-in-out;
+  }
+}
+.modal-image-container {
+  width: 100%;
+  height: 130px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal-image {
+  max-height: 150px;
+  object-fit: contain;
+  object-position: center;
+}
+
+.modal-container {
+  z-index: 9999;
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  background-color: #000000b5;
+  display: none;
+}
+
+/* ------------Breadcrumb-------------- */
 
 .breadcrumb {
   display: flex;
@@ -217,39 +399,7 @@ button {
   flex-wrap: wrap;
 }
 
-.logo {
-  font-weight: 400;
-}
-
-.logo > a {
-  font-size: 2.9rem;
-  font-family: "Passions Conflict", "Commissioner", sans-serif;
-  text-decoration: none;
-  color: white;
-}
-
-.more-info-btn {
-  background-color: transparent;
-  border: none;
-  cursor: pointer;
-  padding: 4px;
-}
-
-.more-info-modal {
-  background: #242424;
-  display: none;
-  flex-direction: column;
-  position: absolute;
-  float: left;
-  left: 50%;
-  top: 50%;
-  max-width: 350px;
-  width: 80%;
-  padding: 20px;
-  border-radius: 4px;
-  border: none;
-  transform: translate(-50%, -50%);
-}
+/* ------------Form-------------- */
 
 form {
   display: flex;
@@ -269,6 +419,7 @@ input {
   padding: 6px 10px;
   border-radius: 4px;
   border: none;
+  min-width: 250px;
   background-color: #121212;
   color: white;
   border: 1px solid #ffffff3d;
@@ -279,69 +430,63 @@ input {
   }
 }
 
-input:-webkit-autofill,
-input:-webkit-autofill:hover, 
-input:-webkit-autofill:focus, 
-input:-webkit-autofill:active{
-    -webkit-box-shadow: 0 0 0 30px #121212 inset !important;
-    -webkit-text-fill-color: white !important;
-    -webkit-outline: none !important;
+/* ------------Scrollbar-------------- */
+
+::-webkit-scrollbar {
+  width: 3px;
 }
 
-.btn {
-  padding: 5px 10px;
-  font-size: 1.1rem;
-  border-radius: 4px;
-  background-color: #121212;
-  border: 1px solid #ffffff3d;
+::-webkit-scrollbar-track {
+  background: gray;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #888;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #242424;
+}
+
+/* ------------Error message-------------- */
+
+.error {
   color: white;
-  margin-top: 10px;
-  cursor: pointer;
-
-  &:hover {
-    background-color: #242424;
-    transition: background-color 300ms ease-in-out;
-  }
-}
-
-.login-container,
-.signup-container {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  flex-direction: column;
-  padding: 20px;
-}
-
-.more-info-modal > .info {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.more-info-modal > .info > p {
+  list-style: none;
+  background-color: #8e1616;
+  padding: 5px;
+  border-radius: 4px;
   font-size: 12px;
-  align-self: end;
 }
 
-.close-modal-btn {
-  align-self: end;
-  padding: 4px 5px;
-  cursor: pointer;
-  background-color: transparent;
-  border: none;
-  z-index: 999;
-
-  &:hover {
-    color: gray;
-    transition: fill 300ms ease-in-out;
+/* ------------Media queries-------------- */
+@media only screen and (max-width: 550px) {
+  .folder,
+  .file {
+    width: 120px;
   }
 }
-.modal-image {
-  width: 100%;
-  height: 130px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+
+@media only screen and (max-width: 450px) {
+  .folders,
+  .files {
+    justify-content: space-evenly;
+  }
+
+  .add-edit-folder-container .btn-link,
+  .add-file-container .btn-link {
+    font-size: 0.8rem;
+  }
+
+  .not-found-container h2 {
+    font-size: 1.2rem;
+  }
+
+  .not-found-container .btn-link {
+    font-size: 0.9rem;
+  }
+
+  .add-file-container input {
+    width: 220px;
+  }
 }

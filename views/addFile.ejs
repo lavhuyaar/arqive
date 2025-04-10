@@ -4,28 +4,32 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="/css/style.css" />
+    <link rel="icon" href="/images/arqive-meta.png">
     <title><%= locals.title %></title>
   </head>
   <body>
     <%- include("partials/navbar.ejs") %>
-    <main>
+    <main class="add-file-container">
+      <%- include("partials/errors.ejs") %>
       <% if(locals.subTitle) { %>
       <h1><%= subTitle %></h1>
-      <%} %> 
+      <%} %>
       <form
         action="/folder/<%= parentFolder ? parentFolder.id : 'root'%>/add-file"
         method="POST"
         enctype="multipart/form-data"
       >
-        <label><input type="file" name="file" required /></label>
-        <a
-          href="/folder/<%= parentFolder ? parentFolder.id : '' %>"
-          class="btn-link"
-          >Cancel</a
-        >
-        <button type="submit">Add File</button>
-      </form>
 
+        <label><input type="file" name="file" /></label>
+        <div class="buttons">
+          <a
+            href="/folder/<%= parentFolder ? parentFolder.id : '' %>"
+            class="btn-link"
+            >Go back to folder</a
+          >
+          <button class="btn-link" type="submit">Add new file</button>
+        </div>
+      </form>
     </main>
     <%- include("partials/footer.ejs") %>
   </body>

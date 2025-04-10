@@ -4,15 +4,19 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="/css/style.css" />
+    <link rel="icon" sizes="25x25" href="/images/arqive-meta.png">
     <title>Arqive - Login</title>
   </head>
   <body>
     <%- include("partials/navbar.ejs") %>
     <main class="login-container">
-      <% if(locals.user) { %>
-      <p>Hey <%= user.firstName%> <%= user.lastName%>, you're already logged in!</p>
+      <%- include("partials/errors.ejs") %> <% if(locals.user) { %>
+      <p>
+        Hey <%= user.firstName%> <%= user.lastName%>, you're already logged in!
+      </p>
       <a class="btn-link" href="/logout">Logout</a>
       <% } else { %>
+        <h1>Login</h1>
       <form action="/login" method="POST" autocomplete="off">
         <label for="username"
           >Username <input type="text" name="username" id="username"
@@ -23,7 +27,8 @@
         <button class="btn" type="submit">Login</button>
       </form>
       <p>
-        Don't have an account? <a class="sign-up-btn" href="/sign-up">Sign up</a>
+        Don't have an account?
+        <a class="normal-link"" href="/sign-up">Sign up</a>
       </p>
       <% } %>
     </main>

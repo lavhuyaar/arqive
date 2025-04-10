@@ -5,10 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Arqive - Sign Up</title>
     <link rel="stylesheet" href="/css/style.css" />
+    <link rel="icon" href="/images/arqive-meta.png" />
   </head>
   <body>
     <%- include("partials/navbar.ejs") %>
     <main class="signup-container">
+      <%- include("partials/errors.ejs") %>
+      <h1>Sign up to unlock your cloud storage</h1>
       <form action="/sign-up" method="POST" autocomplete="off">
         <label
           >First Name <input type="text" name="firstName" id="firstName"
@@ -32,7 +35,9 @@
         /></label>
         <button class="btn" type="submit">Sign up</button>
       </form>
-      <p>Already have an account? <a href="/login">Login</a></p>
+      <p>
+        Already have an account? <a class="normal-link" href="/login">Login</a>
+      </p>
     </main>
     <%- include("partials/footer.ejs") %>
   </body>

@@ -1,13 +1,15 @@
 <script defer>
   const modal = document.querySelector(".more-info-modal");
   const moreInfoBtns = document.querySelectorAll(".more-info-btn");
+  const modalContainer = document.querySelector(".modal-container");
 
   //Closes Info Modal when clicked anywhere other than the Modal itself and More Info button
   document.body.addEventListener("click", (e) => {
     const data = Array.from(moreInfoBtns).some((btn) => btn.contains(e.target));
 
     if (!data && !modal.contains(e.target)) {
-      modal.style.display = "none";
+      modalContainer.style.display = "none";
+      modalContainer.style.display = "none";
     }
   });
 
@@ -41,8 +43,13 @@
           <img src="/svg/cross.svg" alt="Close" />
         </button>
         <div class="info">
-            <div class="modal-image">
+            <div class="modal-image-container">
                 <img
+                class=${
+                  imageTypes.some((t) => t === data.type)
+                    ? "modal-image"
+                    : "modal-icon"
+                }
                 src=${
                   imageTypes.some((t) => t === data.type)
                     ? data.url
@@ -67,9 +74,13 @@
              data.type === "folder" ? "Created at " : "Added at "
            } ${time} on ${date} </p>
         </div>`;
-
+    modalContainer.style.display = "block";
     modal.style.display = "flex";
   };
 
-  const closeModal = () => (modal.style.display = "none");
+  const closeModal = () => {
+    modalContainer.style.display = "none";
+    modal.style.display = "none";
+    modal.innerHTML = "<p>No data to show</p>";
+  };
 </script>
