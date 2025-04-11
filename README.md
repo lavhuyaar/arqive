@@ -18,4 +18,6 @@ Deployment went pretty smooth, I think I'm getting better at it hehe :p
 - Database deployed on - Neon Console
 - Backend deployed on - Render
 
+Svgs used in the project are from [www.svgrepo.com](www.svgrepo.com)
+
 ## Keep up the good work Lav, proud of you (11/04/2025)
