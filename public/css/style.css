@@ -347,6 +347,8 @@ button {
 
 .info h4 {
   margin-top: 5px;
+  padding: 0px 5px;
+  word-break: break-all;
 }
 
 .info > p {
