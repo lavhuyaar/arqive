@@ -4,8 +4,10 @@
   "description": "",
   "main": "app.js",
   "scripts": {
+    "prisma:generate": "prisma generate",
+    "prisma:deploy": "prisma migrate deploy",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "NODE_ENV=production node app.js"
+    "start": "prisma generate && prisma migrate deploy && node app.js"
   },
   "repository": {
     "type": "git",
