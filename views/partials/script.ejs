@@ -1,13 +1,15 @@
 <script defer>
   const modal = document.querySelector(".more-info-modal");
   const moreInfoBtns = document.querySelectorAll(".more-info-btn");
+  const modalContainer = document.querySelector(".modal-container");
 
   //Closes Info Modal when clicked anywhere other than the Modal itself and More Info button
   document.body.addEventListener("click", (e) => {
     const data = Array.from(moreInfoBtns).some((btn) => btn.contains(e.target));
 
     if (!data && !modal.contains(e.target)) {
-      modal.style.display = "none";
+      modalContainer.style.display = "none";
+      modalContainer.style.display = "none";
     }
   });
 
@@ -28,7 +30,7 @@
     "image/webp",
     "image/avif",
   ];
-  const otherFileTypes = [];
+  const otherFileTypes = ["application/pdf", "text/plain"];
 
   //Displays modal with dynamic data (info)
   const showModal = (data) => {
@@ -36,18 +38,26 @@
 
     const [date, time] = getDate(data.createdAt);
 
+    const dataSrc = () => {
+      if (data.type === "folder") return "/images/folder-icon.png";
+      if (data.type === otherFileTypes[0]) return "/images/pdf-icon.png";
+      if (data.type === otherFileTypes[1]) return "/images/text-icon.png";
+      else return data.url;
+    };
+
     modal.innerHTML = "";
     modal.innerHTML = `<button onclick="closeModal()" class="close-modal-btn">
           <img src="/svg/cross.svg" alt="Close" />
         </button>
         <div class="info">
-            <div class="modal-image">
+            <div class="modal-image-container">
                 <img
-                src=${
+                class=${
                   imageTypes.some((t) => t === data.type)
-                    ? data.url
-                    : "/images/folder-icon.png"
+                    ? "modal-image"
+                    : "modal-icon"
                 }
+                src=${dataSrc()}
                 width=${
                   data.type === "folder" ||
                   otherFileTypes.some((t) => t === data.type)
@@ -56,7 +66,7 @@
                 }
                 alt=${data.name}
             /></div>
-          <h4 class="info-name">${data.name}</h4>
+          <h4>${data.name}</h4>
           ${
             data.url
               ? `<a title="Download" class="btn-link" href="/folder/${data.id}/download" download="" />Download</a>`
@@ -67,9 +77,13 @@
              data.type === "folder" ? "Created at " : "Added at "
            } ${time} on ${date} </p>
         </div>`;
-
+    modalContainer.style.display = "block";
     modal.style.display = "flex";
   };
 
-  const closeModal = () => (modal.style.display = "none");
+  const closeModal = () => {
+    modalContainer.style.display = "none";
+    modal.style.display = "none";
+    modal.innerHTML = "<p>No data to show</p>";
+  };
 </script>

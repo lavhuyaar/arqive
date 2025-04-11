@@ -6,6 +6,7 @@ const passport = require("passport");
 const indexRoute = require("./routes/indexRoute");
 const { prismaSession } = require("./lib/prisma");
 const folderRoute = require("./routes/folderRoute");
+const { renderNotFoundPage } = require("./controllers/indexController");
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -23,6 +24,7 @@ app.use(prismaSession);
 
 app.use("/", indexRoute);
 app.use("/folder", folderRoute);
+app.use(renderNotFoundPage);
 
 app.listen(PORT, "0.0.0.0", async () => {
   console.log(`Server running on Port ${PORT}!`);

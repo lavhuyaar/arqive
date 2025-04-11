@@ -5,34 +5,44 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Arqive - Sign Up</title>
     <link rel="stylesheet" href="/css/style.css" />
+    <link rel="icon" href="/images/arqive-meta.png" />
   </head>
   <body>
     <%- include("partials/navbar.ejs") %>
     <main class="signup-container">
+      <%- include("partials/errors.ejs") %>
+      <% if(locals.successMessage) { %>
+        <p class="success-message">User created successfully</p>
+      <% } %>
+      <h1>Sign up to unlock your cloud storage</h1>
       <form action="/sign-up" method="POST" autocomplete="off">
         <label
-          >First Name <input type="text" name="firstName" id="firstName"
+          >First Name <input type="text" name="firstName" id="firstName" value="<%= locals.prevData && prevData.firstName ? prevData.firstName : ''%>"
         /></label>
         <label
-          >Last Name <input type="text" name="lastName" id="lastName"
+          >Last Name <input type="text" name="lastName" id="lastName" value="<%= locals.prevData && prevData.lastName ? prevData.lastName : ''%>"
         /></label>
         <label
-          >Username <input type="text" name="username" id="username"
+          >Username <input type="text" name="username" id="username" value="<%= locals.prevData && prevData.username ? prevData.username : ''%>"
         /></label>
         <label
           >Password<input
             type="password"
             name="password"
-            id="password" /></label
+            id="password" value="<%= locals.prevData && prevData.password ? prevData.password : ''%>"/></label
+            
         ><label
           >Confirm Password<input
             type="password"
             name="confirm_password"
             id="confirm_password"
+            value="<%= locals.prevData && prevData.confirm_password ? prevData.confirm_password : ''%>"
         /></label>
         <button class="btn" type="submit">Sign up</button>
       </form>
-      <p>Already have an account? <a href="/login">Login</a></p>
+      <p>
+        Already have an account? <a class="normal-link" href="/login">Login</a>
+      </p>
     </main>
     <%- include("partials/footer.ejs") %>
   </body>

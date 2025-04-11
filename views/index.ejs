@@ -5,15 +5,27 @@
       <meta charset="UTF-8" />
       <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       <title>Arqive - Home</title>
+      <link rel="icon" href="/images/arqive-meta.png" type="image/png" />
       <link rel="stylesheet" href="/css/style.css" />
     </head>
   </head>
   <body>
     <%- include("partials/navbar.ejs") %>
 
-    <main class="home">
-      <h1>Home</h1>
-      <a href="/folder">Root</a>
+    <main class="home-container">
+      <div class="home-icon">
+        <img src="/images/arqive-logo.png" alt="" />
+      </div>
+      <h1>All Your Files. One Place. Infinite Access.</h1>
+
+      <% if(locals.user) { %>
+      <a class="btn-link" href="/folder">Go to root folder</a>
+      <% } else { %>
+      <div class="buttons">
+        <a class="btn-link" href="/login">Login</a>
+        <a class="btn-link" href="/sign-up">Sign Up</a>
+      </div>
+      <% } %>
     </main>
     <%- include("partials/footer.ejs") %>
   </body>

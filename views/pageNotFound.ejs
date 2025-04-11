@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="/css/style.css" />
+    <title><%= title %></title>
+  </head>
+  <body>
+    <%- include("partials/navbar.ejs") %>
+    <main class="not-found-container">
+      <h1><%= status %></h1>
+      <h2><%= message %></h2>
+      <a href="/" class="btn-link">Go back to Home</a>
+    </main>
+    <%- include("partials/footer.ejs") %>
+  </body>
+</html>

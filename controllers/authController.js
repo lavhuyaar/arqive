@@ -2,6 +2,8 @@ const passport = require("passport");
 const bcrypt = require("bcryptjs");
 const { createUser, getUserById, getUserByUsername } = require("../db/queries");
 const LocalStrategy = require("passport-local").Strategy;
+const { validationResult } = require("express-validator");
+const { validateSignUp } = require("../validators/authValidator");
 
 // ----------PASSPORT JS SETUP-----------------
 passport.use(
@@ -42,8 +44,13 @@ exports.loginUser = async (req, res, next) => {
     if (err) {
       return next(err);
     }
+
+    const { username, password } = req.body;
     if (!user) {
-      return res.render("login", { errors: [{ msg: info.message }] }); // Pass error message
+      return res.render("login", {
+        errors: [{ msg: info.message }],
+        prevData: { username, password },
+      }); // Pass error message
     }
     req.logIn(user, (err) => {
       if (err) {
@@ -55,30 +62,56 @@ exports.loginUser = async (req, res, next) => {
 };
 
 //Creates a new User
-exports.signUpUser = async (req, res, next) => {
-  // const errors = validationResult(req);
-  // if (!errors.isEmpty())
-  //   return res.status(404).render("sign-up", { errors: errors.array() });
+exports.signUpUser = [
+  validateSignUp,
+  async (req, res, next) => {
+    const { firstName, lastName, username, password, confirm_password } =
+      req.body;
+    const errors = validationResult(req);
 
-  const { firstName, lastName, username, password } = req.body;
+    if (!errors.isEmpty())
+      return res.status(404).render("sign-up", {
+        errors: errors.array(),
+        user: req.user,
+        prevData: {
+          firstName,
+          lastName,
+          username,
+          password,
+          confirm_password,
+        },
+      });
 
-  //Checks if username already exists
-  const isUsernameUnavailable = await getUserByUsername(username);
-  if (isUsernameUnavailable) {
-    return res.status(404).render("sign-up", {
-      errors: [{ msg: "This username already exists" }],
-    });
-  }
+    //Checks if username already exists
+    const isUsernameUnavailable = await getUserByUsername(username);
+    if (isUsernameUnavailable) {
+      return res.status(404).render("sign-up", {
+        errors: [{ msg: "This username already exists" }],
+        user: req.user,
+        prevData: {
+          firstName,
+          lastName,
+          username,
+          password,
+          confirm_password,
+        },
+      });
+    }
 
-  try {
-    const hashedPassword = await bcrypt.hash(password, 10); //Hashed password
-    await createUser(username, firstName, lastName, hashedPassword);
-    res.redirect("/login");
-  } catch (err) {
-    console.error(err);
-    next(err);
-  }
-};
+    try {
+      const hashedPassword = await bcrypt.hash(password, 10); //Hashed password
+      await createUser(username, firstName, lastName, hashedPassword);
+      return res.render("sign-up", {
+        errors: null,
+        user: req.user,
+        successMessage: true,
+      });
+    } catch (err) {
+      console.error(err);
+      next(err);
+    }
+  },
+];
 
 //Logs out user
 exports.logoutUser = (req, res, next) => {
@@ -86,6 +119,6 @@ exports.logoutUser = (req, res, next) => {
     if (err) {
       return next(err);
     }
-    res.redirect("/login");
+    return res.redirect("/");
   });
 };

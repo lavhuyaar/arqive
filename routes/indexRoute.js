@@ -18,4 +18,5 @@ indexRoute.get("/sign-up", renderSignUpPage);
 indexRoute.post("/sign-up", signUpUser);
 indexRoute.get("/logout", logoutUser);
 
+
 module.exports = indexRoute;
